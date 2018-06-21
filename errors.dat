@@ -1,0 +1,35 @@
+1001 - Email cannot be empty
+1002 - First name cannot be empty
+1003 - Last name cannot be empty
+1004 - Password cannot be empty
+1005 - You are not signed in
+1006 - Old Password cannot be empty
+1007 - MovieShowingId cannot be empty
+1008 - Seat cannot be empty
+1009 - Price cannot be empty
+1010 - UserId cannot be empty
+
+1011 - Invalid password, password must be 4 - 16 characters long
+1012 - Invalid password, password must only contain alphanumeric characters
+1013 - Invalid email
+1014 - Invalid email, email must only contain alphanumeric characters
+1015 - Wrong email or password
+1016 - Invalid password, did not match
+
+1021 - Email is existing
+1022 - Admin Request is existing
+1023 - No Request, no userId
+1024 - You are not an admin
+1025 - Movie showing not found
+1026 - Seat is existing, already taken
+
+1031 - Title cannot be empty
+1032 - Description cannot be empty
+1033 - Date cannot be empty
+1034 - Time cannot be empty
+1035 - Place cannot be empty
+1036 - Already an admin
+1037 - Request not found
+1038 - Booking not found
+1039 - MovieId cannot be empty
+1040 - Empty
