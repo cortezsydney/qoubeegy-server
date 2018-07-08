@@ -15,6 +15,7 @@
 1014 - Invalid email, email must only contain alphanumeric characters
 1015 - Wrong email or password
 1016 - Invalid password, did not match
+1017 - Invalid price, must be float
 
 1021 - Email is existing
 1022 - Admin Request is existing
@@ -33,3 +34,4 @@
 1038 - Booking not found
 1039 - MovieId cannot be empty
 1040 - Empty
+1041 - Details cannot be empty

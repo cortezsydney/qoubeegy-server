@@ -1,6 +1,5 @@
 const db = require('../../database');
 var SqlString = require('sqlstring');
-const validator = require('validator');
 
 const controller = {
     signInUser : (req, res) => {
@@ -39,6 +38,7 @@ const controller = {
             });
         }); 
     },
+    
     signOutUser: (req, res) => {
         req.session.destroy();
         res.status(200).json({

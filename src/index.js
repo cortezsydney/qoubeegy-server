@@ -5,13 +5,16 @@ const session = require('express-session');
 const store = require('express-mysql-session');
 const db = require('./database');
 const router = require('./router');
-
+const allowCors = require('./middleware/allowCors');
+const cors = require('cors');
 const app = express();
+app.use(express.json());
 const MySQLStore = store(session);
 const sessionStore = new MySQLStore({}, db);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ encoded: true, extended: true }));
+// 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
 var cookieParser = require('cookie-parser');
@@ -27,10 +30,16 @@ app.use(
     checkExpirationInterval: 900000,
     expiration: 86400000,
     secret: 'undefined',
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
+// app.use(session({secret: 'secret'}));
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}));
 
+// app.use(allowCors());
 
 
 app.use('/api', router);

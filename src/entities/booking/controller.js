@@ -1,6 +1,5 @@
 const db = require('../../database');
 var SqlString = require('sqlstring');
-const validator = require('validator');
 
 const controller = {
     addBooking: (req, res) => {
@@ -60,11 +59,15 @@ const controller = {
             });
         }
         
-        const values = [req.session.secret.UserId, req.body.MovieBookingId];
+        if(req.session.secret.UserType == "ADMIN"){
+            
+        }
+
+        const values = [req.session.secret.UserId, req.params.MovieBookingId];
         
-        if (!req.body.MovieBookingId){
+        if (!req.params.MovieBookingId){
             return res.status(400).json({
-                status: 1007, message: 'MovieShowingId cannot be empty!'
+                status: 1007, message: 'MovieBookingId cannot be empty!'
             });
         }
 
@@ -90,10 +93,7 @@ const controller = {
                     }
                 });  
             }
-        });    
-
-
-                  
+        });       
     },
     viewBookings: (req, res) => {   
         if (!req.session.secret){
@@ -113,7 +113,7 @@ const controller = {
             }
             if (!results[0].length){
                 return res.status(400).json({
-                    status: 200, message: 'Successfully get movie booking by user, but is empty',
+                    status: 201, message: 'Successfully get movie booking by user, but is empty',
                 });
             }
             return res.status(200).json({

@@ -3,6 +3,12 @@ var SqlString = require('sqlstring');
 const validator = require('validator');
 
 const controller = {
+    getSession: (req, res) =>{
+        return res.status(200).json({
+            status: 200, message: 'Successfully get session!',
+            data: req.session.secret
+        });
+    },
     editUser : (req, res) => {
         if (!req.session.secret){
             return res.status(400).json({
@@ -51,7 +57,6 @@ const controller = {
         const queryAuthenticate = SqlString.format(
             `SELECT UserId from USER where Password = sha2(?,256) and UserId = ?`, givenPassword
         );
-        
         db.query(queryAuthenticate, (err, results) => {
             if(!results[0]){
                 return res.status(404).json({
@@ -69,8 +74,11 @@ const controller = {
                     if (err)
                         return res.status(500).json({ status: 500, message: 'Internal server error' });
                     else{
+                        console.log(results)
+                        req.session.secret = results[0]
                         return res.status(200).json({
-                            status: 200, message: 'Successfully edited user!'
+                            status: 200, message: 'Successfully edited user!',
+                            data: results[0]
                         });
                     }
                 });
@@ -86,7 +94,7 @@ const controller = {
         
         const givenUserId = [req.session.secret.UserId];
         const queryString = SqlString.format(
-            `DELETE from USER where UserId = ?;`, givenUserId
+            `CALL deleteUser(?);`, givenUserId
         );
 
         db.query(queryString, (err, result) => {
@@ -152,7 +160,7 @@ const controller = {
             return res.status(400).json({
                 status: 1005, message: 'You are not signed in!'
             });
-        }if (!req.body.UserId){
+        }if (!req.params.UserId){
             return res.status(400).json({
                 status: 1023, message: 'Request cannot be empty!'
             });
@@ -163,7 +171,7 @@ const controller = {
             });
         }
         
-        const givenUserId = [req.body.UserId];
+        const givenUserId = [req.params.UserId];
         const querySearch = SqlString.format(
             `SELECT * from REQUEST where UserId = ?`, givenUserId
         );
@@ -192,7 +200,7 @@ const controller = {
         });          
     },
     rejectRequest: (req, res)=> {
-        const UserId = req.body.UserId;
+        const UserId = req.params.UserId;
         
         if (!req.session.secret){
             return res.status(400).json({
@@ -212,7 +220,7 @@ const controller = {
                 status: 1034, message: 'You are not an admin!'
             });
         }
-        const givenUserId = [req.body.UserId];
+        const givenUserId = [UserId];
         const querySearch = SqlString.format(
             `SELECT * from REQUEST where UserId = ?`, givenUserId
         );
@@ -239,6 +247,117 @@ const controller = {
                 });
             }
         });             
+    },
+    addFavorite: (req, res) => {
+        if (!req.session.secret){
+            return res.status(400).json({
+                status: 1005, message: 'You are not signed in!'
+            });
+        }
+
+        if (!req.body.MovieId){
+            return res.status(400).json({
+                status: 1039, message: 'MovieId cannot be empty!'
+            });
+        }
+      
+        
+        const givenMovieId = [req.body.MovieId];
+        const querySearch = SqlString.format(
+            `SELECT * from MOVIE where MovieId = ?`, givenMovieId
+        );
+
+        db.query(querySearch, (err, result) => {
+            if(!result[0]){ 
+                return res.status(400).json({
+                    status: 1037, message: 'MovieId not found!'
+                });
+            }else{
+                const values = [req.body.MovieId, req.session.secret.UserId];
+                const queryString = SqlString.format(
+                    `CALL addFavorite(?, ?);`, values
+                );
+
+                db.query(queryString, (err, Result) => {
+                    if(err){ 
+                        return res.status(500).json({ status: 500, message: 'Internal server error' });
+                    }
+                    else{
+                        return res.status(200).json({
+                            status: 200, message: 'Successfully add favorite!'
+                        });
+                    }
+                });
+            }
+        });          
+    },
+    deleteFavorite: (req, res) => {
+        if (!req.session.secret){
+            return res.status(400).json({
+                status: 1005, message: 'You are not signed in!'
+            });
+        }
+
+        if (!req.params.FavoriteId){
+            return res.status(400).json({
+                status: 1023, message: 'FavoriteId cannot be empty!'
+            });
+        }
+      
+        
+        const givenFavorite = [req.params.FavoriteId];
+        const querySearch = SqlString.format(
+            `SELECT * from FAVORITE where FavoriteId = ?`, givenFavorite
+        );
+
+        db.query(querySearch, (err, result) => {
+            if(!result[0]){ 
+                return res.status(400).json({
+                    status: 1037, message: 'MovieId not found!'
+                });
+            }else{
+                const value = [req.params.FavoriteId];
+                const queryString = SqlString.format(
+                    `CALL deleteFavorite(?);`, value
+                );
+
+                db.query(queryString, (err, Result) => {
+                    if(err){ 
+                        return res.status(500).json({ status: 500, message: 'Internal server error' });
+                    }
+                    else{
+                        return res.status(200).json({
+                            status: 200, message: 'Successfully delete favorite!'
+                        });
+                    }
+                });
+            }
+        });          
+    },
+    viewFavorite: (req, res) => {
+        if (!req.session.secret){
+            return res.status(400).json({
+                status: 1005, message: 'You are not signed in!'
+            });
+        }
+        
+        const givenUserId = [req.session.secret.UserId];
+        const querySearch = SqlString.format(
+            `SELECT FAVORITE.*, MOVIE.* from FAVORITE NATURAL JOIN MOVIE where FAVORITE.UserId = ?`, givenUserId
+        );
+
+        db.query(querySearch, (err, result) => {
+            if(err){ 
+                return res.status(500).json({ status: 500, message: 'Internal server error' });
+            }
+
+            console.log(result + "where")
+            return res.status(200).json({
+                status: 200, message: 'Successfully view favorite!',
+                data: result
+            });
+            
+        });          
     }
 };
 
