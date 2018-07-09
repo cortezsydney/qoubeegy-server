@@ -1,50 +1,49 @@
-const db = require('../../database');
-var SqlString = require('sqlstring');
-
-const controller = {
-    signInUser : (req, res) => {
-        const Username = req.body.Username;
-        const Password = req.body.Password;
-        
-        if (!Username){
-            return res.status(400).json({
-                status: 1001, message: 'Email cannot be empty'
-            });
-        }
-        if (!Password){
-            return res.status(400).json({
-                status: 1004, message: 'Password cannot be empty'
-            });
-        }
-
-        const values = [Username, Password];
-        const queryString = SqlString.format(
-            `CALL userSignIn(?, ?);`, values
-        );
-        
-        db.query(queryString, (err, results) =>{
-            if (err) {
-                return res.status(500).json({ status: 500, message: 'Internal server error' });  
-            }
-            if (!results[0].length) {
-                return res.status(404).json({ 
-                    status: 1015, message: 'Wrong email or password'
+const signInController = (repo) =>{
+    const controller = {
+        signIn : (req, res, next) => {
+            const Username = req.body.Username;
+            const Password = req.body.Password;
+            
+            if (!Username){
+                return res.status(400).json({
+                    status: 1001, message: 'Email cannot be empty'
                 });
             }
-            req.session.secret = results[0][0];
-            return res.status(200).json({
-                status: 200, message: 'Successfully signed in!',
-                data: results[0][0]
-            });
-        }); 
-    },
-    
-    signOutUser: (req, res) => {
-        req.session.destroy();
-        res.status(200).json({
-            status: 200, message: 'Successfully logs out'
-        });
-    }
-};
+            if (!Password){
+                return res.status(400).json({
+                    status: 1004, message: 'Password cannot be empty'
+                });
+            }
 
-module.exports = controller;
+            repo.signIn({Username, Password})
+            .then(
+                result => {
+                    req.session.secret = result[0][0];
+                    return res.status(200).json({
+                        status: 200, message: 'Successfully signed in user!'
+                    });
+                }
+            ).catch(
+                err => {
+                    let message = "";
+                    switch(err){
+                        case 400: message="Invalid email or password"; break;
+                        case 500: message ="Internal server error"; break;
+                    }
+                    res.status(err).json({
+                        status: err == 400 ? 1021 : err, message
+                    });
+                }
+            )
+        },
+        signOut : (req, res, next) => {
+            req.session.destroy();
+            res.status(200).json({
+                status: 200, message: 'Successfully logs out'
+            });
+        }
+    };
+    return controller;
+}
+
+module.exports = signInController;
