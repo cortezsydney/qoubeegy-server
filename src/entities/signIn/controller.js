@@ -15,12 +15,12 @@ const signInController = (repo) =>{
                 });
             }
 
-            repo.signIn({Username, Password})
+            repo.signIn( Username, Password )
             .then(
                 result => {
                     req.session.secret = result[0][0];
                     return res.status(200).json({
-                        status: 200, message: 'Successfully signed in user!'
+                        status: 200, message: 'Successfully signed in user!', data: result[0][0]
                     });
                 }
             ).catch(
@@ -31,7 +31,7 @@ const signInController = (repo) =>{
                         case 500: message ="Internal server error"; break;
                     }
                     res.status(err).json({
-                        status: err == 400 ? 1021 : err, message
+                        status: err == 400 ? 1015 : err, message
                     });
                 }
             )

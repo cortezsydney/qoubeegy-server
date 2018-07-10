@@ -44,9 +44,9 @@ const signUpController = (repo) =>{
                 });
             }
 
-            repo.checkProfile({Username})
+            repo.checkDuplicate(Username)
             .then(
-                result => repo.signUp({Username, FirstName, LastName, Password})
+                result => repo.signUp(Username, FirstName, LastName, Password)
             ).then(
                 result => {
                     return res.status(200).json({
