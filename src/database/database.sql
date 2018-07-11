@@ -388,6 +388,7 @@ call addMovie("Inception", "R16    |    2h 5min", "SM Calamba", "100.99", "2018-
 call addUser("cbcortez3@up.edu.ph", "Clarisse", "Cortez", "hitler19", "ADMIN");
 call addUser("lbafable@up.edu.ph", "Lorenz", "Afable", "brucepogi", "MEMBER");
 call addUser("margareth@yahoo.com", "Francis Margareth", "Cortez", "melody19", "MEMBER");
+call addUser("christian@up.edu.ph", "Christian", "Cortez", "hitler19", "MEMBER");
 call addMovieBooking("1", "1", "A1");
 call addMovieBooking("2", "2", "A1");
 call addFavorite(2, 1);

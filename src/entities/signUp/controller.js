@@ -9,37 +9,44 @@ const signUpController = (repo) =>{
             const Password = req.body.Password;
             
             if (!Username){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1001, message: 'Email cannot be empty'
                 });
             }
             if (!FirstName){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1002, message: 'First Name cannot be empty'
                 });
             }
             if (!LastName){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1003, message: 'Last Name cannot be empty'
                 });
             }
             if (!Password){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1004, message: 'Password cannot be empty'
                 });
             }
             if (Password.length < 4 || Password.length > 16){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1011, message: 'Invalid password, password must be 4 - 16 characters long'
                 });
             }
             if (!validator.isEmail(Username)){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1013, message: 'Invalid email'
                 });
             }
             if (!validator.isAlphanumeric(Password)){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1012, message: 'Invalid password, must only contain alphanumeric characters'
                 });
             }
@@ -49,7 +56,8 @@ const signUpController = (repo) =>{
                 result => repo.signUp(Username, FirstName, LastName, Password)
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully added user!'
                     });
                 }
@@ -60,7 +68,8 @@ const signUpController = (repo) =>{
                         case 400: message="Email is existing"; break;
                         case 500: message ="Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1021 : err, message
                     });
                 }
