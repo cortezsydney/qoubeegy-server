@@ -1,12 +1,6 @@
 const validator = require('validator');
 
 // const controller = {
-//     getSession: (req, res) =>{
-//         return res.status(200).json({
-//             status: 200, message: 'Successfully get session!',
-//             data: req.session.secret
-//         });
-//     },
 //     deleteUser:  (req, res)=> {
 //         if (!req.session.secret){
 //             return res.status(400).json({
@@ -38,7 +32,8 @@ const profileController = (repo) =>{
     const controller = {
         editUser : (req, res, next) => {
             if (!req.session.secret){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1005, message: 'UserId cannot be empty, you are not signed in'
                 });
             }
@@ -50,32 +45,38 @@ const profileController = (repo) =>{
             const OldPassword = req.body.OldPassword;
     
             if (!FirstName){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1002, message: 'First Name cannot be empty'
                 });
             }
             if (!LastName){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1003, message: 'Last Name cannot be empty'
                 });
             }
             if (!OldPassword){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1006, message: 'Old Password cannot be empty'
                 });
             }
             if (!NewPassword){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1004, message: 'Password cannot be empty'
                 });
             }
             if (NewPassword.length < 4 || NewPassword.length > 16){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1011, message: 'Invalid password, password must be 4 - 16 characters long'
                 });
             }
             if (!validator.isAlphanumeric(NewPassword)){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1012, message: 'Invalid password, must only contain alphanumeric characters'
                 });
             }
@@ -85,7 +86,8 @@ const profileController = (repo) =>{
                 result => repo.editUser(UserId, FirstName, LastName, NewPassword)
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully edited user!'
                     });
                 }
@@ -96,7 +98,8 @@ const profileController = (repo) =>{
                         case 400: message="Invalid password"; break;
                         case 500: message ="Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1016 : err, message
                     });
                 }
@@ -104,13 +107,15 @@ const profileController = (repo) =>{
         },
         sendRequest: (req, res) =>{
             if (!req.session.secret){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1005, message: 'You are not signed in'
                 });
             }
 
             if (req.session.secret.UserType === "ADMIN"){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1036, message: 'Already an admin!'
                 });
             }
@@ -121,7 +126,8 @@ const profileController = (repo) =>{
                 result => repo.sendRequest( UserId )
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully send a request!'
                     });
                 }
@@ -132,7 +138,8 @@ const profileController = (repo) =>{
                         case 400: message="Request is existing!"; break;
                         case 500: message ="Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1022 : err, message
                     });
                 }
@@ -140,17 +147,20 @@ const profileController = (repo) =>{
         },
         approveRequest: (req, res) => {
             if (!req.session.secret){
-                return res.status(400).json({
-                    status: 1005, message: 'You are not signed in!'
+                res.status(400);
+                return res.json({
+                    status: 1005, message: 'You are not signed in'
                 });
             }
             if (req.session.secret.UserType === "MEMBER" ){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1034, message: 'You are not an admin!'
                 });
             }
             if (!req.params.UserId){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1023, message: 'Request cannot be empty!'
                 });
             }
@@ -161,7 +171,8 @@ const profileController = (repo) =>{
                 result => repo.approveRequest( UserId )
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully approved request!'
                     });
                 }
@@ -172,7 +183,8 @@ const profileController = (repo) =>{
                         case 400: message="Request not found!"; break;
                         case 500: message ="Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1037 : err, message
                     });
                 }
@@ -180,18 +192,21 @@ const profileController = (repo) =>{
         },
         rejectRequest: (req, res)=> {
             if (!req.session.secret){
-                return res.status(400).json({
-                    status: 1005, message: 'You are not signed in!'
+                res.status(400);
+                return res.json({
+                    status: 1005, message: 'You are not signed in'
                 });
             }
             if (req.session.secret.UserType === "MEMBER"){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1034, message: 'You are not an admin!'
                 });
             }
             if (!req.params.UserId){
-                return res.status(400).json({
-                    status: 1023, message: 'No request!'
+                res.status(400);
+                return res.json({
+                    status: 1023, message: 'Request not found!'
                 });
             }
             
@@ -201,7 +216,8 @@ const profileController = (repo) =>{
                 result => repo.rejectRequest( UserId )
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully deleted request!'
                     });
                 }
@@ -212,7 +228,8 @@ const profileController = (repo) =>{
                         case 400: message="Request not found!"; break;
                         case 500: message ="Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1037 : err, message
                     });
                 }
@@ -220,13 +237,15 @@ const profileController = (repo) =>{
         },
         addFavorite: (req, res) => {
             if (!req.session.secret){
-                return res.status(400).json({
-                    status: 1005, message: 'You are not signed in!'
+                res.status(400);
+                return res.json({
+                    status: 1005, message: 'You are not signed in'
                 });
             }
     
             if (!req.body.MovieId){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1039, message: 'MovieId cannot be empty!'
                 });
             }
@@ -239,7 +258,8 @@ const profileController = (repo) =>{
             ).then(
                 
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully added favorite!'
                     });
                 }
@@ -252,7 +272,8 @@ const profileController = (repo) =>{
                         case 400: message = "Movie not found!"; break;
                         case 500: message = "Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return json({
                         status: err == 400 ? 1037 : err, message
                     });
                 }
@@ -260,13 +281,15 @@ const profileController = (repo) =>{
         },
         deleteFavorite: (req, res) => {
             if (!req.session.secret){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1005, message: 'You are not signed in!'
                 });
             }
     
             if (!req.params.FavoriteId){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1039, message: 'FavoriteId cannot be empty!'
                 });
             }
@@ -277,7 +300,8 @@ const profileController = (repo) =>{
                 result => repo.deleteFavorite( FavoriteId )
             ).then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully deleted favorite!'
                     });
                 }
@@ -288,7 +312,8 @@ const profileController = (repo) =>{
                         case 400: message = "Favorite not found!"; break;
                         case 500: message = "Internal server error"; break;
                     }
-                    res.status(err).json({
+                    res.status(err);
+                    return res.json({
                         status: err == 400 ? 1037 : err, message
                     });
                 }
@@ -296,7 +321,8 @@ const profileController = (repo) =>{
         }, 
         viewFavorite: (req, res) => {
             if (!req.session.secret){
-                return res.status(400).json({
+                res.status(400);
+                return res.json({
                     status: 1005, message: 'You are not signed in!'
                 });
             }
@@ -305,7 +331,8 @@ const profileController = (repo) =>{
             repo.viewFavorite( UserId )
             .then(
                 result => {
-                    return res.status(200).json({
+                    res.status(200);
+                    return res.json({
                         status: 200, message: 'Successfully viewed favorite!', data: result
                     });
                 }
@@ -319,7 +346,8 @@ const profileController = (repo) =>{
             )                
         },
         getSession: (req, res) => {
-            return res.status(200).json({
+            res.status(200);
+            return res.json({
                 status: 200, message: 'Successfully get session!',
                 data: req.session.secret
             });
