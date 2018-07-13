@@ -29,7 +29,6 @@ describe('signUpController', () => {
         });
 
         it('should return status 400, 1002 and message if First Name is missing', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -51,7 +50,6 @@ describe('signUpController', () => {
         });
 
         it('should return status 400, 1003 and message if Last Name is missing', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -73,7 +71,6 @@ describe('signUpController', () => {
         });
 
         it('should return status 400, 1004 and message if Password is missing', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -95,7 +92,6 @@ describe('signUpController', () => {
         });
 
         it('should return status 400, 1011 and message if Password is not 4-16 characters long', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -118,7 +114,6 @@ describe('signUpController', () => {
         });        
 
         it('should return status 400, 1011 and message if Password is not 4-16 characters long', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -141,7 +136,6 @@ describe('signUpController', () => {
         }); 
 
         it('should return status 400, 1013 and message if Username/Email is invalid', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@@@saperium.com',
@@ -164,7 +158,6 @@ describe('signUpController', () => {
         }); 
 
         it('should return status 400, 1012 and message if Password does not contain alphanumeric characters only', () => {
-            // arrange
             const mockReq = {
                 body: {
                     Username: 'mark@saperium.com',
@@ -198,7 +191,7 @@ describe('signUpController', () => {
 
             const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
 
-            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkDuplicate', 'signUp']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkDuplicate']);
             
             mockRepo.checkDuplicate.and.callFake(() => {
                 return Promise.reject(400)
@@ -207,6 +200,7 @@ describe('signUpController', () => {
             controller = signUpController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkDuplicate).toHaveBeenCalledWith(mockReq.body.Username);
                 expect(mockRes.status).toHaveBeenCalledWith(400);
                 expect(param).toEqual({
                     status: 1021,
@@ -218,7 +212,7 @@ describe('signUpController', () => {
             controller.addMember(mockReq, mockRes, null);
         });
 
-        it('should return status 500 and message if internal server error at checking duplicate email', (done) => {
+        it('should return status 500 and message if internal server error (checking duplicate email)', (done) => {
             const mockReq = {
                 body: {
                     Username: 'cbcortez3@up.edu.ph',
@@ -230,7 +224,7 @@ describe('signUpController', () => {
 
             const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
 
-            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkDuplicate', 'signUp']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkDuplicate']);
             
             mockRepo.checkDuplicate.and.callFake(() => {
                 return Promise.reject(500)
@@ -239,6 +233,7 @@ describe('signUpController', () => {
             controller = signUpController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkDuplicate).toHaveBeenCalledWith(mockReq.body.Username);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(param).toEqual({
                     status: 500,
@@ -273,6 +268,8 @@ describe('signUpController', () => {
             controller = signUpController(mockRepo);
     
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkDuplicate).toHaveBeenCalledWith(mockReq.body.Username);
+                expect(mockRepo.signUp).toHaveBeenCalledWith(mockReq.body.Username, mockReq.body.FirstName, mockReq.body.LastName, mockReq.body.Password);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 500,
@@ -306,6 +303,8 @@ describe('signUpController', () => {
             controller = signUpController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkDuplicate).toHaveBeenCalledWith(mockReq.body.Username);
+                expect(mockRepo.signUp).toHaveBeenCalledWith(mockReq.body.Username, mockReq.body.FirstName, mockReq.body.LastName, mockReq.body.Password);
                 expect(mockRes.status).toHaveBeenCalledWith(200);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 200,

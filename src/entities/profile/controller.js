@@ -235,7 +235,7 @@ const profileController = (repo) =>{
                 }
             )                
         },
-        addFavorite: (req, res) => {
+        addFavorite: (req, res, next) => {
             if (!req.session.secret){
                 res.status(400);
                 return res.json({
@@ -255,8 +255,7 @@ const profileController = (repo) =>{
             repo.checkExistingMovieId( MovieId )
             .then(
                 result => repo.addFavorite( MovieId , UserId )
-            ).then(
-                
+            ).then(    
                 result => {
                     res.status(200);
                     return res.json({
@@ -264,16 +263,14 @@ const profileController = (repo) =>{
                     });
                 }
             ).catch(
-                
                 err => {
-                    console.log("me")
                     let message = "";
                     switch(err){
-                        case 400: message = "Movie not found!"; break;
+                        case 400: message = "MovieId not found!"; break;
                         case 500: message = "Internal server error"; break;
                     }
                     res.status(err);
-                    return json({
+                    return res.json({
                         status: err == 400 ? 1037 : err, message
                     });
                 }
@@ -283,14 +280,14 @@ const profileController = (repo) =>{
             if (!req.session.secret){
                 res.status(400);
                 return res.json({
-                    status: 1005, message: 'You are not signed in!'
+                    status: 1005, message: 'You are not signed in'
                 });
             }
     
             if (!req.params.FavoriteId){
                 res.status(400);
                 return res.json({
-                    status: 1039, message: 'FavoriteId cannot be empty!'
+                    status: 1039, message: 'Favorite cannot be empty!'
                 });
             }
             
@@ -309,7 +306,7 @@ const profileController = (repo) =>{
                 err => {
                     let message = "";
                     switch(err){
-                        case 400: message = "Favorite not found!"; break;
+                        case 400: message = "FavoriteId not found!"; break;
                         case 500: message = "Internal server error"; break;
                     }
                     res.status(err);
@@ -323,7 +320,7 @@ const profileController = (repo) =>{
             if (!req.session.secret){
                 res.status(400);
                 return res.json({
-                    status: 1005, message: 'You are not signed in!'
+                    status: 1005, message: 'You are not signed in'
                 });
             }
 
@@ -338,14 +335,21 @@ const profileController = (repo) =>{
                 }
             ).catch(
                 err => {
-                    let message = "";
-                    switch(err){
-                        case 500: message = "Internal server error"; break;
-                    }
+                    res.status(500);
+                    return res.json({
+                        status: 500, message: 'Internal server error'
+                    });
                 }
             )                
         },
         getSession: (req, res) => {
+            if (!req.session.secret){
+                res.status(400);
+                return res.json({
+                    status: 1005, message: 'You are not signed in'
+                });
+            }
+
             res.status(200);
             return res.json({
                 status: 200, message: 'Successfully get session!',

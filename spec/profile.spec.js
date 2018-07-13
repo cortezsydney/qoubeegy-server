@@ -230,6 +230,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkPassword).toHaveBeenCalledWith(mockReq.body.OldPassword, mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(400);
                 expect(param).toEqual({
                     status: 1016,
@@ -265,6 +266,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkPassword).toHaveBeenCalledWith(mockReq.body.OldPassword, mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(param).toEqual({
                     status: 500,
@@ -304,6 +306,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkPassword).toHaveBeenCalledWith(mockReq.body.OldPassword, mockReq.session.secret.UserId);
+                expect(mockRepo.editUser).toHaveBeenCalledWith(mockReq.session.secret.UserId, mockReq.body.FirstName, mockReq.body.LastName, mockReq.body.NewPassword);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 500,
@@ -342,6 +346,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkPassword).toHaveBeenCalledWith(mockReq.body.OldPassword, mockReq.session.secret.UserId);
+                expect(mockRepo.editUser).toHaveBeenCalledWith(mockReq.session.secret.UserId, mockReq.body.FirstName, mockReq.body.LastName, mockReq.body.NewPassword);
                 expect(mockRes.status).toHaveBeenCalledWith(200);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 200,
@@ -411,6 +417,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(400);
                 expect(param).toEqual({
                     status: 1022,
@@ -440,6 +447,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(param).toEqual({
                     status: 500,
@@ -473,6 +481,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
+                expect(mockRepo.sendRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 500,
@@ -505,6 +515,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
+                expect(mockRepo.sendRequest).toHaveBeenCalledWith(mockReq.session.secret.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(200);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 200,
@@ -599,6 +611,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(param).toEqual({
                     status: 500,
@@ -610,7 +623,7 @@ describe('profileController', () => {
             controller.approveRequest(mockReq, mockRes, null);
         }); 
 
-        it('should return status 500 and message existin request but internal server error at approving request', (done) => {
+        it('should return status 500 and message existing request but internal server error at approving request', (done) => {
             const mockReq = {
                 session:{
                     secret : {
@@ -635,6 +648,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
+                expect(mockRepo.approveRequest).toHaveBeenCalledWith(mockReq.params.UserId)
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 500,
@@ -670,6 +685,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
+                expect(mockRepo.approveRequest).toHaveBeenCalledWith(mockReq.params.UserId)
                 expect(mockRes.status).toHaveBeenCalledWith(200);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 200,
@@ -764,6 +781,7 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(param).toEqual({
                     status: 500,
@@ -800,6 +818,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
+                expect(mockRepo.rejectRequest).toHaveBeenCalledWith(mockReq.params.UserId)
                 expect(mockRes.status).toHaveBeenCalledWith(500);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 500,
@@ -835,6 +855,8 @@ describe('profileController', () => {
             controller = profileController(mockRepo);
 
             mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingRequestTwo).toHaveBeenCalledWith(mockReq.params.UserId);
+                expect(mockRepo.rejectRequest).toHaveBeenCalledWith(mockReq.params.UserId)
                 expect(mockRes.status).toHaveBeenCalledWith(200);
                 expect(mockRes.json).toHaveBeenCalledWith({
                     status: 200,
@@ -868,7 +890,7 @@ describe('profileController', () => {
             const mockReq = {
                 session:{
                     secret: {
-
+                        UserId: 1
                     }
                 },
                 body: {
@@ -884,6 +906,455 @@ describe('profileController', () => {
                 status: 1039,
                 message: 'MovieId cannot be empty!'
             });
+        });
+
+        it('should return status 400, 1037 and message movie not found', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                },
+                body:{
+                    MovieId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingMovieId']);
+            
+            mockRepo.checkExistingMovieId.and.callFake(() => {
+                return Promise.reject(400)
+            });
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingMovieId).toHaveBeenCalledWith(mockReq.body.MovieId);
+                expect(mockRes.status).toHaveBeenCalledWith(400);
+                expect(param).toEqual({
+                    status: 1037,
+                    message: "MovieId not found!"
+                });
+                done();
+            });
+
+            controller.addFavorite(mockReq, mockRes);
+        }); 
+
+        it('should return status 500 and message internal server error (check existing movie)', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                },
+                body:{
+                    MovieId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingMovieId']);
+            
+            mockRepo.checkExistingMovieId.and.callFake(() => {
+                return Promise.reject(500)
+            });
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingMovieId).toHaveBeenCalledWith(mockReq.body.MovieId);
+                expect(mockRes.status).toHaveBeenCalledWith(500);
+                expect(param).toEqual({
+                    status: 500,
+                    message: "Internal server error"
+                });
+                done();
+            });
+
+            controller.addFavorite(mockReq, mockRes);
+        }); 
+
+        it('should return status 500 and message existing movie but internal server error (adding favorite)', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 2
+                    }
+                },
+                body:{
+                    MovieId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingMovieId', 'addFavorite']);
+
+            mockRepo.checkExistingMovieId.and.callFake(() => {
+                return Promise.resolve();
+            });
+            mockRepo.addFavorite.and.callFake(() => {
+                return Promise.resolve();
+            });
+
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingMovieId).toHaveBeenCalledWith(mockReq.body.MovieId);
+                expect(mockRepo.addFavorite).toHaveBeenCalledWith(mockReq.body.MovieId, mockReq.session.secret.UserId);
+                expect(mockRes.status).toHaveBeenCalledWith(200);
+                expect(mockRes.json).toHaveBeenCalledWith({
+                    status: 200,
+                    message: 'Successfully added favorite!'
+                });
+                done()
+            });
+            controller.addFavorite(mockReq, mockRes, null);
+        });
+
+        it('should return status 200 and message if successful add favorite', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 2
+                    }
+                },
+                body:{
+                    MovieId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingMovieId', 'addFavorite']);
+
+            mockRepo.checkExistingMovieId.and.callFake(() => {
+                return Promise.resolve();
+            });
+            mockRepo.addFavorite.and.callFake(() => {
+                return Promise.resolve();
+            });
+
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingMovieId).toHaveBeenCalledWith(mockReq.body.MovieId);
+                expect(mockRepo.addFavorite).toHaveBeenCalledWith(mockReq.body.MovieId, mockReq.session.secret.UserId);
+                expect(mockRes.status).toHaveBeenCalledWith(200);
+                expect(mockRes.json).toHaveBeenCalledWith({
+                    status: 200,
+                    message: 'Successfully added favorite!'
+                });
+                done()
+            });
+            controller.addFavorite(mockReq, mockRes, null);
+        });
+    });
+
+    describe('deleteFavorite', () => {
+        it('should return status 400, 1005 and message no signed in user', () => {
+            const mockReq = {
+                session:{
+                }
+            };
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+
+            controller = profileController(null);
+            controller.deleteFavorite(mockReq, mockRes, null);
+
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                status: 1005,
+                message: 'You are not signed in'
+            });
+        });
+
+        it('should return status 400, 1039 and message empty favorite id', () => {
+            const mockReq = {
+                session:{
+                    secret: {
+                        UserId: 1
+                    }
+                },
+                params: {
+                }
+            }
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+
+            controller = profileController(null);
+            controller.deleteFavorite(mockReq, mockRes, null);
+
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                status: 1039,
+                message: 'Favorite cannot be empty!'
+            });
+        });
+
+        it('should return status 400, 1037 and message favorite not found', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                },
+                params:{
+                    FavoriteId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingFavoriteId']);
+            
+            mockRepo.checkExistingFavoriteId.and.callFake(() => {
+                return Promise.reject(400)
+            });
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingFavoriteId).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRes.status).toHaveBeenCalledWith(400);
+                expect(param).toEqual({
+                    status: 1037,
+                    message: "FavoriteId not found!"
+                });
+                done();
+            });
+
+            controller.deleteFavorite(mockReq, mockRes);
+        }); 
+
+        it('should return status 500 and message internal server error (check existing favorite)', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                },
+                params:{
+                    FavoriteId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingFavoriteId']);
+            
+            mockRepo.checkExistingFavoriteId.and.callFake(() => {
+                return Promise.reject(500)
+            });
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.checkExistingFavoriteId).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRes.status).toHaveBeenCalledWith(500);
+                expect(param).toEqual({
+                    status: 500,
+                    message: "Internal server error"
+                });
+                done();
+            });
+
+            controller.deleteFavorite(mockReq, mockRes);
+        }); 
+
+        it('should return status 500 and message existing favorite but internal server error (deleting favorite)', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 2
+                    }
+                },
+                params:{
+                    FavoriteId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingFavoriteId', 'deleteFavorite']);
+
+            mockRepo.checkExistingFavoriteId.and.callFake(() => {
+                return Promise.resolve();
+            });
+            mockRepo.deleteFavorite.and.callFake(() => {
+                return Promise.reject(500);
+            });
+
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingFavoriteId).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRepo.deleteFavorite).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRes.status).toHaveBeenCalledWith(500);
+                expect(mockRes.json).toHaveBeenCalledWith({
+                    status: 500,
+                    message: 'Internal server error'
+                });
+                done()
+            });
+            controller.deleteFavorite(mockReq, mockRes, null);
+        });
+
+        it('should return status 200 and message if successful delete favorite', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 2
+                    }
+                },
+                params:{
+                    FavoriteId: 1
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['checkExistingFavoriteId', 'deleteFavorite']);
+
+            mockRepo.checkExistingFavoriteId.and.callFake(() => {
+                return Promise.resolve();
+            });
+            mockRepo.deleteFavorite.and.callFake(() => {
+                return Promise.resolve();
+            });
+
+            controller = profileController(mockRepo);
+
+            mockRes.json.and.callFake(() => {
+                expect(mockRepo.checkExistingFavoriteId).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRepo.deleteFavorite).toHaveBeenCalledWith(mockReq.params.FavoriteId);
+                expect(mockRes.status).toHaveBeenCalledWith(200);
+                expect(mockRes.json).toHaveBeenCalledWith({
+                    status: 200,
+                    message: 'Successfully deleted favorite!'
+                });
+                done()
+            });
+            controller.deleteFavorite(mockReq, mockRes, null);
+        });     
+    });
+
+    describe('viewFavorite', () => {
+        it('should return status 400, 1005 and message no signed in user', () => {
+            const mockReq = {
+                session:{
+                }
+            };
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+
+            controller = profileController(null);
+            controller.viewFavorite(mockReq, mockRes, null);
+
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                status: 1005,
+                message: 'You are not signed in'
+            });
+        });
+
+        it('should return status 500 and message internal server error', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['viewFavorite']);
+
+            mockRepo.viewFavorite.and.callFake(() => {
+                return Promise.reject(500)
+            });
+            controller = profileController(mockRepo);
+    
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.viewFavorite).toHaveBeenCalledWith(mockReq.session.secret.UserId);
+                expect(mockRes.status).toHaveBeenCalledWith(500);
+                expect(param).toEqual({
+                    status: 500,
+                    message: 'Internal server error'
+                });
+                done()
+            });
+            controller.viewFavorite(mockReq, mockRes, null);
+        }); 
+
+        it('should return status 200 and message successfully viewed favorite', (done) => {
+            const mockReq = {
+                session:{
+                    secret : {
+                        UserId: 1
+                    }
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['viewFavorite']);
+  
+            mockRepo.viewFavorite.and.callFake(() => {
+                return Promise.resolve(
+                    {}
+                )
+            });
+            controller = profileController(mockRepo);
+    
+            mockRes.json.and.callFake((param) => {
+                expect(mockRepo.viewFavorite).toHaveBeenCalledWith(mockReq.session.secret.UserId);
+                expect(mockRes.status).toHaveBeenCalledWith(200);
+                expect(param).toEqual({
+                    status: 200,
+                    message: 'Successfully viewed favorite!',
+                    data: {}
+                });
+                done()
+            });
+            controller.viewFavorite(mockReq, mockRes, null);
+        }); 
+    });
+
+    describe('getSession', () => {
+        it('should return status 400, 1005 and message no signed in user', () => {
+            const mockReq = {
+                session:{
+                }
+            };
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+
+            controller = profileController(null);
+            controller.getSession(mockReq, mockRes, null);
+
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                status: 1005,
+                message: 'You are not signed in'
+            });
+        });
+
+        it('should return status 200 and message successfully get session', () => {
+            const mockReq = {
+                session:{
+                    secret : {
+                    }
+                }
+            };
+
+            const mockRes = jasmine.createSpyObj('mockRes', ['status', 'json']);
+            const mockRepo = jasmine.createSpyObj('mockRepo', ['viewFavorite']);
+  
+            mockRepo.viewFavorite.and.callFake(() => {
+                return Promise.resolve(
+                    {}
+                )
+            });
+            controller = profileController(mockRepo);
+    
+            mockRes.json.and.callFake((param) => {
+                expect(mockRes.status).toHaveBeenCalledWith(200);
+                expect(param).toEqual({
+                    status: 200,
+                    message: 'Successfully viewed favorite!',
+                    data: {}
+                });
+            });
+            controller.viewFavorite(mockReq, mockRes, null);
         });
     });
 });

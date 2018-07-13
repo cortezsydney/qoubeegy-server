@@ -57,6 +57,7 @@ describe('signInController', () => {
             controller = signInController(mockRepo);
 
             mockRes.json.and.callFake((param) => {
+                expect(mockRepo.signIn).toHaveBeenCalledWith(mockReq.body.Username, mockReq.body.Password);
                 expect(mockRes.status).toHaveBeenCalledWith(400);
                 expect(param).toEqual({
                     status: 1015,
@@ -86,6 +87,7 @@ describe('signInController', () => {
         controller = signInController(mockRepo);
 
         mockRes.json.and.callFake((param) => {
+            expect(mockRepo.signIn).toHaveBeenCalledWith(mockReq.body.Username, mockReq.body.Password);
             expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(param).toEqual({
                 status: 500,
@@ -122,6 +124,7 @@ describe('signInController', () => {
         controller = signInController(mockRepo);
 
         mockRes.json.and.callFake((param) => {
+            expect(mockRepo.signIn).toHaveBeenCalledWith(mockReq.body.Username, mockReq.body.Password);
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(param).toEqual({
                 status: 200,
