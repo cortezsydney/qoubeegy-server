@@ -12,8 +12,19 @@ app.use(express.json());
 const MySQLStore = store(session);
 const sessionStore = new MySQLStore({}, db);
 
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
+
+io.on('connection', socket => {
+  console.log('user connected');
+
+  socket.on("add-booking", request => {
+    socket.broadcast.emit("add-booking", request);
+  });
+});
+
 app.use(bodyParser.json());
-// 
+//
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
@@ -47,7 +58,7 @@ app.use('/api', router);
 
 const port = process.env.PORT || 3001;
 
-const server = app.listen(port, () => {
+const server = http.listen(port, () => {
   console.log(`Server is running at port: ${port}`);
 });
 
